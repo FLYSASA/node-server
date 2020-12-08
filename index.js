@@ -1,20 +1,19 @@
 const express = require('express')
 // 使用multer接收文件
 const multer = require('multer')
-// 将接收的文件放到yyy目录下，没有的话会自动新建一个yyy文件夹
-const upload = multer({ dest: 'yyy/' })
+const cors = require('cors')
+// 将接收的文件放到attachment目录下，没有的话会自动新建一个attachment文件夹
+const upload = multer({ dest: 'attachment/' })
 
 // 使用express构建app
 const app = express()
 
-app.get('/', (req, res)=>{
-  res.send('hello thks')
-})
 
-app.get('/preview/:key', (req, res)=>{
-  console.log(req.params.key)
+app.options('upload', cors())
+
+app.get('/preview/:key', cors(), (req, res)=>{
   // 获取到前端给的参数后，去发送文件
-  res.sendFile(`yyy/${req.params.key}`, {
+  res.sendFile(`attachment/${req.params.key}`, {
     root: __dirname,
     headers:{
       'Content-Type': 'image/jpeg',
@@ -26,9 +25,9 @@ app.get('/preview/:key', (req, res)=>{
   })
 })
 
-app.post('/upload', upload.single('xxx'), (req, res)=>{
-  // cors 跨域
-  res.set('Access-Control-Allow-Origin', '*')
+app.post('/upload', cors(), upload.single('file'), (req, res)=>{
+  // cors 跨域 引入cors()后就不需要手动设置这个了
+  // res.set('Access-Control-Allow-Origin', '*')
   res.send(req.file.filename)
 })
 
