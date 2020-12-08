@@ -11,6 +11,10 @@ const app = express()
 
 app.options('upload', cors())
 
+app.get('/',  cors(), (req, res)=>{
+  res.send('my node-server')
+})
+
 app.get('/preview/:key', cors(), (req, res)=>{
   // 获取到前端给的参数后，去发送文件
   res.sendFile(`attachment/${req.params.key}`, {
