@@ -31,4 +31,5 @@ app.post('/upload', cors(), upload.single('file'), (req, res)=>{
   res.send(req.file.filename)
 })
 
-app.listen(3000)
+var port = process.env.PORT || 3000;
+app.listen(port)
