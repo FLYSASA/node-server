@@ -28,7 +28,8 @@ app.get('/preview/:key', cors(), (req, res)=>{
     }
   })
 })
-
+// 单个上传
+// upload.single('file') 为单个
 app.post('/upload', cors(), upload.single('file'), (req, res)=>{
   // cors 跨域 引入cors()后就不需要手动设置这个了
   // res.set('Access-Control-Allow-Origin', '*')
@@ -37,6 +38,13 @@ app.post('/upload', cors(), upload.single('file'), (req, res)=>{
     id: filename
   }
   res.send(JSON.stringify(resData)) // 序列化，现在发送的是字符串
+})
+
+// 多个同时上传（其实前端上传改为一个一个单独上传后这个用不到了）
+// upload.array('file', 12)  // 多个，最多12个, file是formData的name
+app.post('/uploads', cors(), upload.array('file', 12), (req, res)=>{
+  let responseData = req.files.map(file => file.filename)
+  res.send(JSON.stringify(responseData))
 })
 
 var port = process.env.PORT || 3000;
