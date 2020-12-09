@@ -32,7 +32,11 @@ app.get('/preview/:key', cors(), (req, res)=>{
 app.post('/upload', cors(), upload.single('file'), (req, res)=>{
   // cors 跨域 引入cors()后就不需要手动设置这个了
   // res.set('Access-Control-Allow-Origin', '*')
-  res.send(req.file.filename)
+  let filename = req.file.filename
+  let resData = {
+    id: filename
+  }
+  res.send(JSON.stringify(resData)) // 序列化，现在发送的是字符串
 })
 
 var port = process.env.PORT || 3000;
