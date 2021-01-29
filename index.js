@@ -1,6 +1,7 @@
 const express = require('express')
 // 使用multer接收文件
 const multer = require('multer')
+// cors跨域
 const cors = require('cors')
 // 将接收的文件放到attachment目录下，没有的话会自动新建一个attachment文件夹
 const upload = multer({ dest: 'attachment/' })
@@ -49,3 +50,19 @@ app.post('/uploads', cors(), upload.array('file', 12), (req, res)=>{
 
 var port = process.env.PORT || 3000;
 app.listen(port)
+
+// 多个参数 瓦片图有用到
+app.get('/preview/:z/:x/:y', cors(), (req, res)=>{
+  // 获取到前端给的参数后，去发送文件
+  const {z, x, y} = req.params
+  res.sendFile(`attachment/${z}/${x}/${y}`, {
+    root: __dirname,
+    headers:{
+      'Content-Type': 'image/jpeg',
+    },
+  }, (error)=>{
+    if(error){
+      res.status(404).send('Not found')
+    }
+  })
+})
